@@ -36,4 +36,12 @@ public class GameService {
     public void shuffleCards(List<Card> cards) {
         Collections.shuffle(cards);
     }
+
+    public Card dealCard(List<Card> cards) {
+        int randomCardIndex = (int) (Math.random() * cards.size());
+        var cardToDeal = cards.get(randomCardIndex);
+        cards.remove(randomCardIndex);
+
+        return cardToDeal;
+    }
 }
