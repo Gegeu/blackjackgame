@@ -43,14 +43,20 @@ public class GameService {
 
         var deckOfCards = game.getDeck();
         boolean isFirstRound = deckOfCards.getCards().size() > 51;
-        var playerCard = deckService.dealCard(deckOfCards);
-        var dealerCard = deckService.dealCard(deckOfCards);
         Player player = game.getPlayer();
         Player dealer = game.getDealer();
-        setActualScore(player, playerCard);
-        setActualScore(dealer, dealerCard);
+        var playersList = new ArrayList<>(Arrays.asList(player, dealer));
+        var playerDTOResponses = new ArrayList<PlayerDTOResponse>();
 
-        var playerDTOResponses = getPlayerDTOResponses(player, playerCard, dealer, dealerCard);
+        for(int i = 0; i < playersList.size(); i++) {
+            boolean isFirstPlayer = i == 0;
+            boolean setAsDealerIfFirst = isFirstPlayer ? true : false;
+            Player actualPlayer = playersList.get(i);
+            var playerCard = deckService.dealCard(deckOfCards);
+            setActualScore(actualPlayer, playerCard);
+            PlayerDTOResponse response = getPlayerDTOResponses(actualPlayer, playerCard, setAsDealerIfFirst);
+            playerDTOResponses.add(response);
+        }
 
         return playerDTOResponses;
     }
@@ -109,20 +115,14 @@ public class GameService {
             return roundDTOResponse;
     }
 
-    public ArrayList<PlayerDTOResponse> getPlayerDTOResponses(Player player, Card playerCard, Player dealer, Card dealerCard) {
+    public PlayerDTOResponse getPlayerDTOResponses(Player player, Card playerCard, boolean isDealer) {
         var playerResponse = PlayerDTOResponse.builder()
                 .score(player.getScore())
                 .cards(new ArrayList<>(Collections.singletonList(playerCard)))
-                .isDealer(false)
+                .isDealer(isDealer)
                 .build();
-        var dealerResponse = PlayerDTOResponse.builder()
-                .score(dealer.getScore())
-                .cards(new ArrayList<>(Collections.singletonList(dealerCard)))
-                .isDealer(true)
-                .build();
-        var playerDTOResponses = new ArrayList<>(Arrays.asList(playerResponse, dealerResponse));
 
-        return playerDTOResponses;
+        return playerResponse;
     }
 
 }
