@@ -1,6 +1,7 @@
 package com.algeujunior.altjack.service;
 
 import com.algeujunior.altjack.domain.Card;
+import com.algeujunior.altjack.domain.Deck;
 import com.algeujunior.altjack.domain.Game;
 import com.algeujunior.altjack.domain.Player;
 import com.algeujunior.altjack.domain.dto.response.PlayerDTOResponse;
@@ -48,15 +49,7 @@ public class GameService {
         var playersList = new ArrayList<>(Arrays.asList(player, dealer));
         var playerDTOResponses = new ArrayList<PlayerDTOResponse>();
 
-        for(int i = 0; i < playersList.size(); i++) {
-            boolean isFirstPlayer = i == 0;
-            boolean setAsDealerIfFirst = isFirstPlayer ? true : false;
-            Player actualPlayer = playersList.get(i);
-            var playerCard = deckService.dealCard(deckOfCards);
-            setActualScore(actualPlayer, playerCard);
-            PlayerDTOResponse response = getPlayerDTOResponses(actualPlayer, playerCard, setAsDealerIfFirst);
-            playerDTOResponses.add(response);
-        }
+        setPlayerValues(deckOfCards, isFirstRound, playersList, playerDTOResponses);
 
         return playerDTOResponses;
     }
@@ -72,6 +65,31 @@ public class GameService {
         var savedGame = gameRepository.save(game);
 
         return savedGame.getId();
+    }
+
+    private void setPlayerValues(Deck deckOfCards, boolean isFirstRound, ArrayList<Player> playersList, ArrayList<PlayerDTOResponse> playerDTOResponses) {
+        for(int i = 0; i < playersList.size(); i++) {
+            boolean isFirstPlayer = i == 0;
+            boolean setAsDealerIfFirst = isFirstPlayer ? true : false;
+            var actualPlayer = playersList.get(i);
+            var playerCard = deckService.dealCard(deckOfCards);
+            setActualScore(actualPlayer, playerCard);
+            var playerDTOResponse = getPlayerDTOResponses(actualPlayer, playerCard, setAsDealerIfFirst);
+            playerDTOResponses.add(playerDTOResponse);
+            checkIfIsFirstRound(deckOfCards, isFirstRound, playerDTOResponses, i, actualPlayer);
+        }
+    }
+
+    private void checkIfIsFirstRound(Deck deckOfCards, boolean isFirstRound, ArrayList<PlayerDTOResponse> playerDTOResponses, int i, Player actualPlayer) {
+        if(isFirstRound) {
+            var playerSecondCard = deckService.dealCard(deckOfCards);
+            setActualScore(actualPlayer, playerSecondCard);
+            var actualPlayerDTOResponse = playerDTOResponses.get(i);
+            var actualPlayerCards = actualPlayerDTOResponse.getCards();
+            actualPlayerCards.add(playerSecondCard);
+            int updatedPlayerScore = actualPlayer.getScore();
+            actualPlayerDTOResponse.setScore(updatedPlayerScore);
+        }
     }
 
     public int getPlayerActualScore(Player player, Card playerCard) {
