@@ -43,7 +43,9 @@ public class GameService {
     public List<PlayerDTOResponse> hit(Game game) {
 
         var deckOfCards = game.getDeck();
-        boolean isFirstRound = deckOfCards.getCards().size() > 51;
+        int actualDeckSize = deckOfCards.getCards().size();
+        int secondRoundDeckSize = 51;
+        boolean isFirstRound = actualDeckSize > secondRoundDeckSize;
         Player player = game.getPlayer();
         Player dealer = game.getDealer();
         var playersList = new ArrayList<>(Arrays.asList(player, dealer));
