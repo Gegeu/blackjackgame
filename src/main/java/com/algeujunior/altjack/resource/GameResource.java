@@ -28,7 +28,7 @@ public class GameResource {
         return ResponseEntity.created(uri).build();
     }
 
-    @GetMapping("/{gameId}")
+    @PatchMapping("/{gameId}")
     public ResponseEntity<RoundDTOResponse> playRound(@PathVariable String gameId) {
         var roundDTOResponse = gameService.playRound(gameId);
 
@@ -50,7 +50,7 @@ public class GameResource {
     }
 
     @GetMapping("/results")
-    public ResponseEntity<List<Score>> saveResult() {
+    public ResponseEntity<List<Score>> getResults() {
         var resultsList = gameService.getResultScores();
 
         return ResponseEntity.ok(resultsList);
