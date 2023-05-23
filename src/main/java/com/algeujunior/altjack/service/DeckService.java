@@ -2,7 +2,6 @@ package com.algeujunior.altjack.service;
 
 import com.algeujunior.altjack.domain.Card;
 import com.algeujunior.altjack.domain.Deck;
-import com.algeujunior.altjack.domain.Player;
 import com.algeujunior.altjack.domain.enums.Rank;
 import com.algeujunior.altjack.domain.enums.Suit;
 import org.springframework.stereotype.Service;

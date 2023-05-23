@@ -11,5 +11,5 @@ public class RoundDTOResponse {
 
     private List<PlayerDTOResponse> playerDTOResponse;
     private String winner;
-    private boolean hasEnded;
+    private boolean ended;
 }

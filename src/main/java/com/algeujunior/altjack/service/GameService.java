@@ -1,15 +1,15 @@
 package com.algeujunior.altjack.service;
 
-import com.algeujunior.altjack.domain.Card;
-import com.algeujunior.altjack.domain.Deck;
-import com.algeujunior.altjack.domain.Game;
-import com.algeujunior.altjack.domain.Player;
+import com.algeujunior.altjack.domain.*;
+import com.algeujunior.altjack.domain.dto.request.ScoreDTORequest;
 import com.algeujunior.altjack.domain.dto.response.PlayerDTOResponse;
 import com.algeujunior.altjack.domain.dto.response.RoundDTOResponse;
 import com.algeujunior.altjack.repository.GameRepository;
+import com.algeujunior.altjack.repository.ScoreRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -21,26 +21,26 @@ public class GameService {
     @Value("${message.exception.game-not-found}")
     private String gameNotFoundMessage;
     private GameRepository gameRepository;
+    private ScoreRepository scoreRepository;
     private DeckService deckService;
 
-    public GameService(GameRepository gameRepository, DeckService deckService) {
+    public GameService(GameRepository gameRepository, ScoreRepository scoreRepository, DeckService deckService) {
         this.gameRepository = gameRepository;
+        this.scoreRepository = scoreRepository;
         this.deckService = deckService;
     }
 
-    public RoundDTOResponse play(String gameId) {
-        String gameNotFoundResponseMessage = String.format(gameNotFoundMessage, gameId);
-        var game = gameRepository.findById(gameId)
-                .orElseThrow(() -> new RuntimeException(gameNotFoundResponseMessage));
+    public RoundDTOResponse playRound(String gameId) {
+        var game = findGameIfExists(gameId);
 
-        var playerDTOResponses = hit(game);
+        var playerDTOResponses = hitRound(game);
         var roundDTOResponse = getRoundResponse(playerDTOResponses);
         gameRepository.save(game);
 
         return roundDTOResponse;
     }
 
-    public List<PlayerDTOResponse> hit(Game game) {
+    public List<PlayerDTOResponse> hitRound(Game game) {
 
         var deckOfCards = game.getDeck();
         int actualDeckSize = deckOfCards.getCards().size();
@@ -54,6 +54,36 @@ public class GameService {
         setPlayerValues(deckOfCards, isFirstRound, playersList, playerDTOResponses);
 
         return playerDTOResponses;
+    }
+
+    public void finishGame(String gameId) {
+        var game = findGameIfExists(gameId);
+
+        gameRepository.deleteById(game.getId());
+    }
+
+    public void savePlayerResult(ScoreDTORequest resultDTORequest, String gameId) {
+        var game = findGameIfExists(gameId);
+        var score = Score.builder()
+                .score(game.getPlayer().getScore())
+                .playerName(resultDTORequest.getPlayerName())
+                .dateTime(LocalDateTime.now())
+                .build();
+
+        scoreRepository.save(score);
+    }
+
+    public List<Score> getResultScores() {
+        var resultList = scoreRepository.findAllByOrderByScoreDesc();
+
+        return resultList;
+    }
+
+    public Game findGameIfExists(String gameId) {
+        String gameNotFoundResponseMessage = String.format(gameNotFoundMessage, gameId);
+
+        return gameRepository.findById(gameId)
+                .orElseThrow(() -> new RuntimeException(gameNotFoundResponseMessage));
     }
 
     public String initNewGame() {
@@ -119,7 +149,7 @@ public class GameService {
             var winner = isDealer ? "player" : "dealer";
             var roundDTOResponse = RoundDTOResponse.builder()
                         .playerDTOResponse(playerDTOResponses)
-                        .hasEnded(true)
+                        .ended(true)
                         .winner(winner)
                         .build();
 
@@ -128,7 +158,7 @@ public class GameService {
 
             var roundDTOResponse = RoundDTOResponse.builder()
                     .playerDTOResponse(playerDTOResponses)
-                    .hasEnded(false)
+                    .ended(false)
                     .winner(null)
                     .build();
 
