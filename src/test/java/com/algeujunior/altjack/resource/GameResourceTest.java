@@ -7,6 +7,7 @@ import com.algeujunior.altjack.domain.dto.response.PlayerDTOResponse;
 import com.algeujunior.altjack.domain.dto.response.RoundDTOResponse;
 import com.algeujunior.altjack.domain.enums.Rank;
 import com.algeujunior.altjack.domain.enums.Suit;
+import com.algeujunior.altjack.exception.exceptions.CustomEntityNotFoundException;
 import com.algeujunior.altjack.service.GameService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hamcrest.Matchers;
@@ -111,6 +112,23 @@ public class GameResourceTest {
         mvc.perform(request)
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$", Matchers.hasSize(1)));
+    }
+
+    @Test
+    @DisplayName("Should throw when game not exists")
+    public void throwGameNotExists() throws Exception {
+        var gameId = "1";
+        String message = String.format("Game ID: %s not found.", gameId);
+        BDDMockito.given(gameService.playRound(gameId))
+                .willThrow(new CustomEntityNotFoundException(message));
+
+        var request = MockMvcRequestBuilders
+                .patch(API.concat("/" + gameId))
+                .contentType(MediaType.APPLICATION_JSON);
+
+        mvc.perform(request)
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("message").value(message));
     }
 
     private Score scoreMock() {

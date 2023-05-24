@@ -4,6 +4,7 @@ import com.algeujunior.altjack.domain.*;
 import com.algeujunior.altjack.domain.dto.request.ScoreDTORequest;
 import com.algeujunior.altjack.domain.enums.Rank;
 import com.algeujunior.altjack.domain.enums.Suit;
+import com.algeujunior.altjack.exception.exceptions.CustomEntityNotFoundException;
 import com.algeujunior.altjack.repository.GameRepository;
 import com.algeujunior.altjack.repository.ScoreRepository;
 import com.algeujunior.altjack.service.DeckService;
@@ -86,7 +87,7 @@ public class GameServiceTest {
     public void shouldThrowWhenGameNotExists() {
         var notExistingId = "1";
 
-        Assertions.assertThrows(RuntimeException.class, () -> gameService.findGameIfExists(notExistingId));
+        Assertions.assertThrows(CustomEntityNotFoundException.class, () -> gameService.findGameIfExists(notExistingId));
     }
 
     @Test
