@@ -110,11 +110,11 @@ public class GameService {
     private void setPlayerValues(Deck deckOfCards, boolean isFirstRound, ArrayList<Player> playersList, ArrayList<PlayerDTOResponse> playerDTOResponses) {
         for(int i = 0; i < playersList.size(); i++) {
             boolean isFirstPlayer = i == 0;
-            boolean setAsDealerIfFirst = isFirstPlayer ? true : false;
+            boolean setAsDealerIfSecond = isFirstPlayer ? false : true;
             var actualPlayer = playersList.get(i);
             var playerCard = deckService.dealCard(deckOfCards);
             setActualScore(actualPlayer, playerCard);
-            var playerDTOResponse = getPlayerDTOResponses(actualPlayer, playerCard, setAsDealerIfFirst);
+            var playerDTOResponse = getPlayerDTOResponses(actualPlayer, playerCard, setAsDealerIfSecond);
             playerDTOResponses.add(playerDTOResponse);
             checkIfIsFirstRound(deckOfCards, isFirstRound, playerDTOResponses, i, actualPlayer);
         }
