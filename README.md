@@ -21,6 +21,12 @@ Assim, os jogadores são independetes entre si, com baixo risco de conflito.
 ### 🧱 Diagrama da Aplicação
 ![](https://raw.githubusercontent.com/Gegeu/blackjackgame/main/diagrama%20altjack.jpg)
 
+## 📝 Documentação e Uso
+Você pode utilizar com o próprio swagger da aplicação:
+* Ambiente hospedado:
+* Ambiente local: localhost:PORTA_DA_APLICACAO/swagger-ui/index.html#/
+![](https://raw.githubusercontent.com/Gegeu/blackjackgame/main/diagrama%20altjack.jpg)
+
 ## 🎮 Como Jogar
 1. Crie um jogo fazendo uma requisição para /games, você receberá o ID do seu jogo
 2. Jogue a rodada, fazendo uma requisição para /games/{idDoJogo}, a cada requisição você receberá suas cartas e sua pontuação, assim como do dealer
