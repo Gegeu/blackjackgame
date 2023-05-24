@@ -99,6 +99,8 @@
 				<configuration>
 					<excludes>
 						<exclude>com/algeujunior/altjack/domain/**/*</exclude>
+						<exclude>com/algeujunior/altjack/exception/**/*</exclude>
+						<exclude>com/algeujunior/altjack/AltjackApplication.*</exclude>
 					</excludes>
 				</configuration>
 			</plugin>

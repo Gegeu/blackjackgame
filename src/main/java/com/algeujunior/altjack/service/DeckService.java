@@ -4,6 +4,7 @@ import com.algeujunior.altjack.domain.Card;
 import com.algeujunior.altjack.domain.Deck;
 import com.algeujunior.altjack.domain.enums.Rank;
 import com.algeujunior.altjack.domain.enums.Suit;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -11,11 +12,13 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@Slf4j
 public class DeckService {
 
     public Deck initializeDeck() {
         var initializedCards = initializeCards();
         var deckOfCards = new Deck(initializedCards);
+        log.debug("Initialized deck: {}", deckOfCards);
 
         return deckOfCards;
     }
@@ -43,6 +46,7 @@ public class DeckService {
         int randomCardIndex = (int) (Math.random() * deckCards.size());
         var cardToDeal = deckCards.get(randomCardIndex);
         deckCards.remove(randomCardIndex);
+        log.debug("Removed card: {} from deck: {}", cardToDeal, deck.toString());
 
         return cardToDeal;
     }

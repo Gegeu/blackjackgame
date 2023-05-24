@@ -7,6 +7,7 @@ import com.algeujunior.altjack.domain.dto.response.RoundDTOResponse;
 import com.algeujunior.altjack.exception.exceptions.CustomEntityNotFoundException;
 import com.algeujunior.altjack.repository.GameRepository;
 import com.algeujunior.altjack.repository.ScoreRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Service
+@Slf4j
 public class GameService {
 
     @Value("${message.exception.game-not-found}")
@@ -37,6 +39,7 @@ public class GameService {
         var playerDTOResponses = hitRound(game);
         var roundDTOResponse = getRoundResponse(playerDTOResponses);
         gameRepository.save(game);
+        log.info("Game ID {} played round: {}", gameId, roundDTOResponse.toString());
 
         return roundDTOResponse;
     }
@@ -53,6 +56,7 @@ public class GameService {
         var playerDTOResponses = new ArrayList<PlayerDTOResponse>();
 
         setPlayerValues(deckOfCards, isFirstRound, playersList, playerDTOResponses);
+        log.debug("Is first round: {} hit round response: {}", isFirstRound, playerDTOResponses);
 
         return playerDTOResponses;
     }
@@ -61,6 +65,7 @@ public class GameService {
         var game = findGameIfExists(gameId);
 
         gameRepository.deleteById(game.getId());
+        log.info("Game ID: {} finished", gameId);
     }
 
     public void savePlayerResult(ScoreDTORequest resultDTORequest, String gameId) {
@@ -72,6 +77,7 @@ public class GameService {
                 .build();
 
         scoreRepository.save(score);
+        log.info("Saved score: {}", score.toString());
     }
 
     public List<Score> getResultScores() {
@@ -96,6 +102,7 @@ public class GameService {
         game.setPlayer(player);
         game.setDeck(deckOfCards);
         var savedGame = gameRepository.save(game);
+        log.debug("Game ID: {} created - Game data: {}", savedGame.getId(), game.toString());
 
         return savedGame.getId();
     }
