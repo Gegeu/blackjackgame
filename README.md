@@ -23,9 +23,39 @@ Assim, os jogadores são independetes entre si, com baixo risco de conflito.
 
 ## 📝 Documentação e Uso
 Você pode utilizar com o próprio swagger da aplicação:
-* Ambiente hospedado:
+* Ambiente hospedado: https://blackjackgame-production.up.railway.app/swagger-ui/index.html
 * Ambiente local: localhost:PORTA_DA_APLICACAO/swagger-ui/index.html#/
-![](https://raw.githubusercontent.com/Gegeu/blackjackgame/main/diagrama%20altjack.jpg)
+![](https://raw.githubusercontent.com/Gegeu/blackjackgame/main/blackjackswagger.jpg)
+
+###Configuração local
+Edite as variaveis de ambiente para uma instância do Redis e Postgresql:
+```
+spring.data.redis.host=REDIS_HOST
+spring.data.redis.port=REDIS_PORT
+spring.data.redis.username=REDIS_USERNAME
+spring.data.redis.password=REDIS_PASS
+spring.datasource.url=POSTGRES_HOST
+spring.datasource.username=POSTGRES_USERNAME
+spring.datasource.password=POSTGRES_PASS
+```
+Dentro da pasta raiz do projeto, baixe as dependências com maven install:
+```
+./mvnw clean install
+```
+Para iniciar a aplicação, execute o comando spring run:
+```
+./mvnw spring-boot:run
+```
+
+### 🛡Testes
+Para executar os testes com a cobertura, acesse a pasta raiz e execute: 
+```
+./mvnw clean install
+```
+Será gerado um relatório pelo JaCoCo com a cobertura, disponível no diretório:
+```
+target/site/jacoco/index.html
+```
 
 ## 🎮 Como Jogar
 1. Crie um jogo fazendo uma requisição para /games, você receberá o ID do seu jogo
