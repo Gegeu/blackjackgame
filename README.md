@@ -27,7 +27,7 @@ Você pode utilizar com o próprio swagger da aplicação:
 * Ambiente local: localhost:PORTA_DA_APLICACAO/swagger-ui/index.html#/
 ![](https://raw.githubusercontent.com/Gegeu/blackjackgame/main/blackjackswagger.jpg)
 
-###Configuração local
+### Configuração local
 Edite as variaveis de ambiente para uma instância do Redis e Postgresql:
 ```
 spring.data.redis.host=REDIS_HOST
