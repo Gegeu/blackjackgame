@@ -19,7 +19,7 @@ Para controlar a partida, os dados são salvos no banco em memória e relacionad
 Assim, os jogadores são independetes entre si, com baixo risco de conflito.
 
 ### 🧱 Diagrama da Aplicação
-![](diagrama altjack.jpg)
+![](https://raw.githubusercontent.com/Gegeu/blackjackgame/main/diagrama%20altjack.jpg)
 
 ## 🎮 Como Jogar
 1. Crie um jogo fazendo uma requisição para /games, você receberá o ID do seu jogo
