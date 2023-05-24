@@ -4,6 +4,7 @@ import com.algeujunior.altjack.domain.*;
 import com.algeujunior.altjack.domain.dto.request.ScoreDTORequest;
 import com.algeujunior.altjack.domain.dto.response.PlayerDTOResponse;
 import com.algeujunior.altjack.domain.dto.response.RoundDTOResponse;
+import com.algeujunior.altjack.exception.exceptions.CustomEntityNotFoundException;
 import com.algeujunior.altjack.repository.GameRepository;
 import com.algeujunior.altjack.repository.ScoreRepository;
 import org.springframework.beans.factory.annotation.Value;
@@ -83,7 +84,7 @@ public class GameService {
         String gameNotFoundResponseMessage = String.format(gameNotFoundMessage, gameId);
 
         return gameRepository.findById(gameId)
-                .orElseThrow(() -> new RuntimeException(gameNotFoundResponseMessage));
+                .orElseThrow(() -> new CustomEntityNotFoundException(gameNotFoundResponseMessage));
     }
 
     public String initNewGame() {
